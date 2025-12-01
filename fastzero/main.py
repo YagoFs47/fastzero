@@ -24,6 +24,7 @@ def create_user(user: UserSchema):
     return user_with_id
 
 
+# Atualizar Usuário
 @app.put(
     '/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
 )
@@ -37,3 +38,17 @@ def update_user(user_id: int, user: UserSchema):
         id=user_id, **user.model_dump()
     ).model_dump()
     return DATABASE[user_id - 1]
+
+
+# Deletar usuário
+@app.delete(
+    '/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
+)
+def delete_user(user_id: int):
+    if user_id < 1 or user_id > len(DATABASE):
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='User not found'
+        )
+
+    user_deleted = DATABASE.pop(user_id - 1)
+    return user_deleted

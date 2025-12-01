@@ -69,3 +69,23 @@ def test_user_not_exists(client):
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'User not found'}
+
+
+def test_delete_user(client):
+    response = client.delete('/users/1')
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'username': 'Marcos José',
+        'email': 'marcosjose@gmail.com',
+        'id': 1,
+    }
+
+
+def test_user_not_exists_on_delete(client):
+    response = client.delete(
+        '/users/1',
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'User not found'}
